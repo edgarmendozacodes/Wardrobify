@@ -19,9 +19,11 @@ def get_locations():
     for location in content["locations"]:
         LocationVO.objects.update_or_create(
             import_href=location["href"],
-            closet_name = location["closet_name"],
-            section_number = location["section_number"],
-            shelf_number = location["shelf_number"]
+            defaults = {"name": location["name"]},
+            # the rest? 
+            # closet_name = location["closet_name"],
+            # section_number = location["section_number"],
+            # shelf_number = location["shelf_number"],
         )
 
 def poll():

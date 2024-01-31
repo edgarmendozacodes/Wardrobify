@@ -2,8 +2,8 @@
 
 Team:
 
-- Person 1 - Which microservice?
-- Person 2 - Which microservice?
+- Julia : Shoes
+- Edgar : Hats
 
 ## Design
 
@@ -14,5 +14,5 @@ microservice, here.
 
 ## Hats microservice
 
-Explain your models and integration with the wardrobe
-microservice, here.
+Approach: Working with back-end {getting a better understanding of concepts} and moving to front-end. 
+- Models -> Admin -> Views -> URLs -> Insomnia
