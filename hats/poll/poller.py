@@ -10,7 +10,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hats_project.settings")
 django.setup()
 
 #from hats_rest.models import Something
-from .models import LocationVO
+from hats_rest.models import LocationVO
 
 def get_locations():
     url = ("http://wardrobe-api:8000/api/locations/")
@@ -18,10 +18,14 @@ def get_locations():
     content = json.loads(response.content)
     for location in content["locations"]:
         LocationVO.objects.update_or_create(
-            closet_name = location["closet_name"],
-            section_number = location["section_number"],
-            shelf_number = location["shelf_number"],
+            # bare minimum is href
+            # wardrobe api dropdown
             import_href=location["href"],
+            defaults={
+                "closet_name": location["closet_name"],
+                "section_number":location["section_number"],
+                "shelf_number":location["shelf_number"],
+            }
         )
         print(response.status_code)
 

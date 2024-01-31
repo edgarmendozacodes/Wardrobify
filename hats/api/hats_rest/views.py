@@ -44,44 +44,12 @@ class HatDetailEncoder(ModelEncoder):
         "location": LocationVOEncoder(),
     }
 
-@require_http_methods(["GET", "DELETE", "PUT"])
-def api_show_hats(request, pk):# pk is the primary key -> api/conferences/<pk>/
-    #"GET"
-    if request.method == "GET": 
-        try:
-            hat = Hat.objects.get(id=pk) # is 'hats' better for this code
-            return JsonResponse(
-                hat,
-                encoder=HatDetailEncoder, #is this the right ENCODER for this ? 
-                safe=False,
-            )
-        except Hat.DoesNotExist: # is the try/except necessary OR is an if/return okay?
-            response = JsonResponse({"message": "Does not exist"})
-            response.status_code=404
-            return response
-    # DELETE: Fearless-Frontend/Events/Api_Views Delete Method     
-    elif request.method == "DELETE":
-        count, _ = Hat.objects.filter(id=pk).delete()
-        return JsonResponse({"deleted": count > 0})
-    # PUT: Fearless-Frontend/Events/Api_Views Edit Method 
-    else:
-        content = json.loads(request.body)
-        Hat.objects.filter(id=pk).update(**content)
-        hat = Hat.objects.get(id=pk)
-        return JsonResponse(
-            hat,
-            encoder = HatDetailEncoder,
-            safe=False,
-        )
-
-
 @require_http_methods(["GET", "POST"])
 def api_list_hats(request):
     # GET: Retrieves all instances of 'hat'
     # D2: DIY JSON Library Events/Views
     if request.method == "GET": 
-        hat = Hat.objects.all()
-        
+        hat = Hat.objects.all()        
         return JsonResponse(
             {"hat": hat}, 
             encoder = HatListEncoder,
@@ -105,3 +73,30 @@ def api_list_hats(request):
             encoder=HatDetailEncoder,
             safe=False,
         )
+
+
+@require_http_methods(["GET", "DELETE", "PUT"])
+def api_show_hats(request, pk):
+    if request.method == "GET":
+        hat = Hat.objects.get(id=pk)
+        return JsonResponse(
+            hat, 
+            encoder=HatDetailEncoder,
+            safe=False,
+        )
+
+    elif request.method == "PUT":
+        content=json.loads(request.body)
+        try:
+            if "location" in content: 
+                location=LocationVO.objects.get(id=content["location"])
+                content["location"]=location
+        except LocationVO.DoesNotExist:
+            return JsonResponse(
+                {"message": "Invalid Location"},
+                status=400,
+                )
+    
+    else: #DELETE
+            count, _ = Hat.objects.filter(id=pk).delete()
+            return JsonResponse({"Hat Deleted Successfully": count > 0})
