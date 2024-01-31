@@ -36,9 +36,10 @@ class HatDetailEncoder(ModelEncoder):
         "style_name", 
         "color",
         "picture_url", 
+        "id",
         "location",
     ]
-    #get_extra_data OR it coduld be encoder dictionary
+    #ENCODER
     encoders = {
         "location": LocationVOEncoder(),
     }
@@ -75,7 +76,7 @@ def api_show_hats(request, pk):# pk is the primary key -> api/conferences/<pk>/
 
 
 @require_http_methods(["GET", "POST"])
-def api_list_hats(request, hat_id):
+def api_list_hats(request):
     # GET: Retrieves all instances of 'hat'
     # D2: DIY JSON Library Events/Views
     if request.method == "GET": 
@@ -86,20 +87,21 @@ def api_list_hats(request, hat_id):
             encoder = HatListEncoder,
             safe=False,
         )
-    # POST: what the heck, hat_id/pk
-    elif request.method == "POST":
+    # POST: 
+    else:
         content = json.loads(request.body)
-        try:
-            hat = Hat.objects.get(id=hat_id)
-            content["hat"] = hat
-        except Hat.DoesNotExist:
-            return JsonResponse(
-                {"message": "Invalid Hat ID"},
-                status=400,
-            )
+        # try: 
+        location_href = content["location"]
+        location = LocationVO.objects.get(import_href=location_href)
+        content["location"] = location
+        # except:
+        #     return JsonResponse(
+        #         {"message": "Not working ******"},
+        #         status=400,
+        #     )
         hat = Hat.objects.create(**content)
         return JsonResponse(
-            hat, 
-            encoder=HatListEncoder, 
+            hat,
+            encoder=HatDetailEncoder,
             safe=False,
         )
