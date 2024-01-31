@@ -10,23 +10,28 @@ from .models import BinVO, Shoe
 class BinVODetailEncoder(ModelEncoder):
     model = BinVO
     properties = [
-        "closet_name",
         "bin_number",
-        "bin_size",
+        "import_href",
     ]
 
 class ShoeListEncoder(ModelEncoder):
     model = Shoe
     properties = [
+        "id",
+        "manufacturer",
         "model_name",
-        "picture_url",
+        "color",
+        "bin",
     ]
-    def get_extra_data(self, o):
-        return {"bin": o.bin.closet_name}
+    encoders = {
+        "bin": BinVODetailEncoder(),
+    }
+
 
 class ShoeDetailEncoder(ModelEncoder):
     model = Shoe
     properties = [
+        "id",
         "manufacturer",
         "model_name",
         "color",
@@ -37,13 +42,11 @@ class ShoeDetailEncoder(ModelEncoder):
         "bin": BinVODetailEncoder(),
     }
 
+
 @require_http_methods(["GET", "POST"])
 def api_list_shoes(request):
     if request.method == "GET":
-        if bin_vo_id is not None:
-            shoes = Shoe.objects.filter(bin=bin_vo_id)
-        else:
-            shoes = Shoe.objects.all()
+        shoes = Shoe.objects.all()
         return JsonResponse(
             {"shoes": shoes},
             encoder=ShoeListEncoder,
@@ -51,12 +54,12 @@ def api_list_shoes(request):
     else:
         content = json.loads(request.body)
         try:
-            bin_vo_id = content["bin"]
-            bin = BinVO.objects.get(id = bin_vo_id)
+            bin_href = content["bin"]
+            bin = BinVO.objects.get(import_href = bin_href)
             content["bin"] = bin
         except BinVO.DoesNotExist:
             return JsonResponse(
-                {"message": "Invalid conference id"},
+                {"message": "Invalid bin id"},
                 status=400,
             )
 
@@ -66,3 +69,16 @@ def api_list_shoes(request):
             encoder=ShoeDetailEncoder,
             safe=False,
         )
+
+@require_http_methods(["GET", "DELETE"])
+def api_delete_shoes(request, id):
+    if request.method == "GET":
+        shoe = Shoe.objects.get(id=id)
+        return JsonResponse(
+            shoe,
+            encoder=ShoeDetailEncoder,
+            safe=False,
+        )
+    else:
+        count, _ = Shoe.objects.filter(id=id).delete()
+        return JsonResponse({"deleted": count > 0})

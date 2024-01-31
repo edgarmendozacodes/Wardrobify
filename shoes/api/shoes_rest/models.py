@@ -2,13 +2,13 @@ from django.db import models
 
 # Create your models here.
 class BinVO(models.Model):
-    closet_name = models.CharField(max_length=100)
-    bin_number = models.PositiveSmallIntegerField()
-    bin_size = models.PositiveSmallIntegerField()
+    import_href = models.CharField(max_length=200, unique=True)
+    bin_number = models.PositiveSmallIntegerField(null=True)
+
 
 class Shoe(models.Model):
     manufacturer = models.CharField(max_length=200)
-    model_name = models.CharField(max_length=200, null=True, blank=True)
+    model_name = models.CharField(max_length=200, null=True)
     color = models.CharField(max_length=200)
     picture_url = models.URLField(null=True)
 
@@ -17,3 +17,5 @@ class Shoe(models.Model):
         related_name="shoes",
         on_delete=models.CASCADE,
     )
+    # def get_api_url(self):
+    #     return reverse("api_show_shoes", kwargs={"pk": self.pk})
