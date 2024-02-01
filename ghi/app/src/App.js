@@ -4,7 +4,7 @@ import Nav from './Nav';
 
 
 import HatList from "./HatList";
-//import
+import HatForm from "./HatForm";
 
 
 function App() {
