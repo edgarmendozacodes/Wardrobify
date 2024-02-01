@@ -2,6 +2,11 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainPage from './MainPage';
 import Nav from './Nav';
 
+
+import HatList from "./HatList";
+//import
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -9,10 +14,14 @@ function App() {
       <div className="container">
         <Routes>
           <Route path="/" element={<MainPage />} />
+          <Route path="/hats" element={<HatList />} />
+
+
         </Routes>
       </div>
     </BrowserRouter>
   );
 }
 
+console.log()
 export default App;

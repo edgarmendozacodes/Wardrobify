@@ -1,35 +1,71 @@
 import React, {useState, useEffect } from 'react';
+// useEffect = hook / allows dev to perform side effects
 
-function HatsList() {
-    const [hatList, setHatlist] = useState([])
-
-    const fetchData = async () => {
+function HatList() {
+    const [hats, setHats] = useState([])
+    // useState hook of an array with hats as a state variable
+    const getData = async () => {
         const url = 'http://localhost:8090/api/hats';
         const response = await fetch(url);
-
         if (response.ok) {
             const data = await response.json();
-            setHatlist(data);
-        }
-    }
-    useEffect(() =>
-        getData()
-    }, [])
+            console.log(data);
+            setHats(data.hat);
+        } 
+};
+    useEffect(() => { //hook
+        getData(); // call
+      }, []); // dependency array; if empty, only run once NOT forever
+
+    function deleteHat(id) {
+        fetch('http://localhost:8090/api/hats/${id}' ,{
+            method: 'DELETE'
+    }).then((result) => {
+        result.json().then((resp) => {
+            console.warn(resp)
+            getData();
+        })
+    })
+    }  
+
 
     return(
-        <table className="table table-striped">
-            <thead>
-                <tr>
-                    <th> Hat </th>
-                    <th> Location </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td></td>
-
-                </tr>
-            </tbody>
-        </table>
-    )
+        <div className="row">
+            <div className="offset-3 col-6">
+                <div className="shadow p-4 mt-4">
+                    <h1> Look at all these Chickens </h1>
+                    
+                    <table className="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> Fabric </th>
+                                <th> Style </th>
+                                <th> Color </th>
+                                <th> Picture </th>
+                                <th> Location </th>
+                                <th> Delete </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          {hats.map((hat) => {
+                            return (
+                            <tr key={hat.id} >
+                                <td>{ hat.fabric }</td>
+                                <td>{ hat.style_name }</td>
+                                <td>{ hat.color }</td>
+                                <td>{ hat.picture_url }</td> 
+                                <td>{ hat.location }</td>
+                                {<td>
+                                    <button onClick={() => deleteHat(hat.id)} type="button" className="btn btn-danger">Delete</button>
+                                </td>}
+                            </tr>
+                            );
+                          })}
+                        </tbody>
+                    </table>
+                </div>    
+            </div>
+        </div>
+    );
 }
+export default HatList;
