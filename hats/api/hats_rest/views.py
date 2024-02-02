@@ -7,7 +7,7 @@ from common.json import ModelEncoder
 
 # Location VO Encoder from Location class in Wardrobe & .models/LocationVO
 class LocationVOEncoder(ModelEncoder):
-    model = LocationVO 
+    model = LocationVO
     properties = [
         "closet_name",
         "section_number",
@@ -20,9 +20,9 @@ class HatListEncoder(ModelEncoder):
     model = Hat
     properties = [
         "fabric",
-        "style_name", 
+        "style_name",
         "color",
-        "picture_url", 
+        "picture_url",
         "id",
     ]
     # D2: DIY JSON / using get_x_data: gets extra data & returns as a dictionary
@@ -33,9 +33,9 @@ class HatDetailEncoder(ModelEncoder):
     model = Hat
     properties = [
         "fabric",
-        "style_name", 
+        "style_name",
         "color",
-        "picture_url", 
+        "picture_url",
         "id",
         "location",
     ]
@@ -48,17 +48,17 @@ class HatDetailEncoder(ModelEncoder):
 def api_list_hats(request):
     # GET: Retrieves all instances of 'hat'
     # D2: DIY JSON Library Events/Views
-    if request.method == "GET": 
-        hat = Hat.objects.all()        
+    if request.method == "GET":
+        hat = Hat.objects.all()
         return JsonResponse(
-            {"hat": hat}, 
+            {"hat": hat},
             encoder = HatListEncoder,
             safe=False,
         )
-    # POST: 
+    # POST:
     else:
         content = json.loads(request.body)
-        # try: 
+        # try:
         location_href = content["location"]
         location = LocationVO.objects.get(import_href=location_href)
         content["location"] = location
@@ -80,7 +80,7 @@ def api_show_hats(request, pk):
     if request.method == "GET":
         hat = Hat.objects.get(id=pk)
         return JsonResponse(
-            hat, 
+            hat,
             encoder=HatDetailEncoder,
             safe=False,
         )
@@ -88,7 +88,7 @@ def api_show_hats(request, pk):
     elif request.method == "PUT":
         content=json.loads(request.body)
         try:
-            if "location" in content: 
+            if "location" in content:
                 location=LocationVO.objects.get(id=content["location"])
                 content["location"]=location
         except LocationVO.DoesNotExist:
@@ -96,7 +96,7 @@ def api_show_hats(request, pk):
                 {"message": "Invalid Location"},
                 status=400,
                 )
-    
+
     else: #DELETE
             count, _ = Hat.objects.filter(id=pk).delete()
             return JsonResponse({"Hat Deleted Successfully": count > 0})
