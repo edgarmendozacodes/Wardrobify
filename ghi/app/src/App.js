@@ -7,6 +7,11 @@ import ShoeForm from './ShoeForm'
 
 
 
+
+import HatList from "./HatList";
+import HatForm from "./HatForm";
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -18,10 +23,14 @@ function App() {
 
           <Route path="/shoes" element={<ShoeList />} />
           <Route path="/shoes/new" element={<ShoeForm />} />
+          <Route path="/hats" element={<HatList />} />
+
+
         </Routes>
       </div>
     </BrowserRouter>
   );
 }
 
+console.log()
 export default App;
