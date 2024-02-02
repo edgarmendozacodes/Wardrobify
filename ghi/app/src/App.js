@@ -15,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/hats" element={<HatList />} />
+          <Route path="/hats/new/" element={<HatForm />} />
 
 
         </Routes>
@@ -23,5 +24,4 @@ function App() {
   );
 }
 
-console.log()
 export default App;

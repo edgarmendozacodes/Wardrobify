@@ -16,9 +16,16 @@ function Nav() {
             <li className="nav-item">
               <NavLink className="nav-link" to="/shoes">Shoes</NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/hats">Hats</NavLink>
-            </li>
+
+
+            
+            <li className="nav-item-dropdown"> 
+                <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Hats</a>
+                  <ul className="dropdown-menu">
+                    <li><NavLink className="dropdown-item" to="/hats">Hat List</NavLink></li>
+                    <li><NavLink className="dropdown-item" to="/hats/new/">Add Hat</NavLink></li>
+                  </ul>
+              </li>
           </ul>
         </div>
       </div>

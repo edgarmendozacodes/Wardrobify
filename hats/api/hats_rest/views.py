@@ -58,27 +58,21 @@ def api_list_hats(request):
     # POST: 
     else:
         content = json.loads(request.body)
-        # try: 
+        # try:
         location_href = content["location"]
         location = LocationVO.objects.get(import_href=location_href)
         content["location"] = location
-        # except:
-        #     return JsonResponse(
-        #         {"message": "Not working ******"},
+        # except LocationVO.DoesNotExist:
+        #     return JsonResponse({"message": "Invalid location id"},
         #         status=400,
         #     )
         hat = Hat.objects.create(**content)
-        return JsonResponse(
-            hat,
-            encoder=HatDetailEncoder,
-            safe=False,
-        )
-
+        return JsonResponse(hat, encoder=HatDetailEncoder, safe=False,)
 
 @require_http_methods(["GET", "DELETE", "PUT"])
-def api_show_hats(request, pk):
+def api_show_hats(request, id):
     if request.method == "GET":
-        hat = Hat.objects.get(id=pk)
+        hat = Hat.objects.get(id=id)
         return JsonResponse(
             hat, 
             encoder=HatDetailEncoder,
@@ -98,5 +92,5 @@ def api_show_hats(request, pk):
                 )
     
     else: #DELETE
-            count, _ = Hat.objects.filter(id=pk).delete()
-            return JsonResponse({"Hat Deleted Successfully": count > 0})
+            delete, _ = Hat.objects.filter(id=id).delete()
+            return JsonResponse({"Hat Deleted Successfully": delete > 0})

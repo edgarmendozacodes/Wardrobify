@@ -14,7 +14,7 @@ function HatList() {
         } 
     };
     const deleteHat = async (id) => {
-        const response = await fetch('http://localhost:8090/api/hats/${id}', {
+        const response = await fetch('http://localhost:8090/api/hats/'+id, {
             method: 'delete', 
         });
         if (response.ok) {
@@ -25,19 +25,6 @@ function HatList() {
     useEffect(() => { //hook
         getData(); // call
       }, []); // dependency array; if empty, only run once NOT forever
-
-    // function deleteHat(id) {
-    //     fetch('http://localhost:8090/api/hats/${id}' ,{
-    //         method: 'DELETE'
-    // }).then((result) => {
-    //     result.json().then((resp) => {
-    //         console.warn(resp)
-    //         getData();
-    //     })
-    // })
-    // }  
-
-
     return(
         <div className="row">
             <div className="offset-3 col-6">

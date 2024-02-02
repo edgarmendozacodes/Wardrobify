@@ -7,12 +7,7 @@ function HatForm(){
     const [color, setColor ] = useState('');
     const [pictureUrl, setPictureUrl ] = useState('');
     const [location, setLocation ] = useState('');
-    // const [,  ] = ('');      
-    
-    // const handleChange = (event) => {
-    //     const value = event.target.value;
-    //     set (value);
-    // }
+
     const handleFabricChange = (event) => {
         const value = event.target.value;
         setFabric(value);
@@ -41,7 +36,7 @@ function HatForm(){
             data.fabric= fabric;
             data.style_name= styleName; 
             data.color= color;
-            data.pictureUrl= pictureUrl;
+            data.picture_url= pictureUrl;
             data.location= location; 
             console.log(data);
         
@@ -55,23 +50,20 @@ function HatForm(){
             },
         };
     
-    const  response = await fetch(hatUrl, fetchConfig);
-    if (response.ok) {
-        const newHat = await response.json();
-        console.log(newHat);
-
-        setStyleName('');
-        setFabric('');
-        setColor('');
-        setPictureUrl('');
-        setLocation('');
-    }  
+        const response = await fetch(hatUrl, fetchConfig);
+            if (response.ok) {
+                setStyleName('');
+                setFabric('');
+                setColor('');
+                setPictureUrl('');
+                setLocation('');
+            }  
 }
 const fetchData = async () => {
     const url = 'http://localhost:8100/api/locations/';
     const response = await fetch(url);
     if (response.ok) {
-        const data = await response.jseon();
+        const data = await response.json();
         setLocations(data.locations);
     }
 }
@@ -100,10 +92,11 @@ useEffect(() => {
                         <label htmlFor="picture_url">Picture URL</label>
                     </div>                    
                         <div className="mb-3">
-                        <select value={location} onChange={handleLocationChange} placeholder="Location" name="fabric" id="fabric" className="form-select">
+                        <select value={location} onChange={handleLocationChange} placeholder="Location" name="location" id="location" className="form-select">
+                        <option value=""> Choose a Hat Location </option>
                         {locations.map(location => {
                             return (
-                                <option key={location.id} value={location.id}>
+                                <option key={location.id} value={location.href}>
                                     {location.closet_name}
                                 </option>
                             );

@@ -13,7 +13,7 @@ django.setup()
 from hats_rest.models import LocationVO
 
 def get_locations():
-    url = ("http://wardrobe-api:8000/api/locations/")
+    url = ("http://wardrobe-api:8100/api/locations/")
     response=requests.get(url)
     content = json.loads(response.content)
     for location in content["locations"]:
@@ -33,7 +33,9 @@ def poll():
     while True:
         print('Hats poller polling for data')
         try:
-            get_locations()    
+            get_locations()
+            # res = reqeusts.get('')
+            # content = res.json()    
         except Exception as e:
             print(e, file=sys.stderr)
         time.sleep(60)
